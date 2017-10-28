@@ -7,4 +7,4 @@ from .base_model import BaseModel
 from .mixins import *
 
 
-__version__ = '0.1.1'
+__version__ = '0.1.3'
