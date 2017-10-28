@@ -15,7 +15,7 @@ dependencies = [
 
 
 setup(
-    name='microhttpـrestful',
+    name='microhtt_restful',
     version=package_version,
     author='Mahdi Ghanea.g',
     author_email='contact@meyti.ir',
