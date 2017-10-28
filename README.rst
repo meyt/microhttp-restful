@@ -1,6 +1,13 @@
 microhttp-restful
 =================
 
+.. image:: https://travis-ci.org/meyt/microhttp-restful.svg?branch=master
+    :target: https://travis-ci.org/meyt/microhttp-restful
+
+.. image:: https://coveralls.io/repos/github/meyt/microhttp-restful/badge.svg?branch=master
+    :target: https://coveralls.io/github/meyt/microhttp-restful?branch=master
+
+
 A tool-chain for create RESTful web applications.
 
 Features:
