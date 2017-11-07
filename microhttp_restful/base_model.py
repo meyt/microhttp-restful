@@ -6,6 +6,8 @@ from sqlalchemy.inspection import inspect
 
 from sqlalchemy_dict import BaseModel as SADictBaseModel
 
+from webtest_docgen import FormParam
+
 from nanohttp import context, HttpNotFound
 
 from microhttp_restful import MetadataField, Field
@@ -107,6 +109,28 @@ class BaseModel(SADictBaseModel):
             return result
 
         return wrapper
+
+    @classmethod
+    def to_form_params(cls):
+        """ Get model parameters in ``webtest_docgen.FormParam`` """
+        for c in cls.iter_dict_columns(relationships=False, include_readonly_columns=False):
+            column = cls.get_column(c)
+
+            if hasattr(column, 'default') and column.default:
+                default_ = column.default.arg if column.default.is_scalar else 'function(...)'
+            else:
+                default_ = ''
+
+            yield FormParam(
+                name=cls.get_dict_key(c),
+                type_=column.type.python_type,
+                default=default_,
+                required=not column.nullable,
+                min_length=column.info.get('min_length'),
+                max_length=column.info.get('max_length'),
+                pattern=column.info.get('pattern'),
+                example=column.info.get('example'),
+            )
 
 
 @event.listens_for(BaseModel, 'class_instrument')
