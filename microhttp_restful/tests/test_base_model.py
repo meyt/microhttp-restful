@@ -161,6 +161,9 @@ class BaseModelTestCase(WebAppTestCase):
         )
         self.assertEqual(resp.json['title'], 'me')
 
+        # Get columns in FormParameter list
+        self.assertEqual(len(list(Member.to_form_params())), 10)
+
     def test_metadata(self):
         resp = self.wsgi_app.metadata('/')
 
