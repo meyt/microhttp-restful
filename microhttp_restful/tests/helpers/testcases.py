@@ -6,16 +6,21 @@ from microhttp.ext import db
 from microhttp_restful.tests.helpers import MockApplication, DeclarativeBase
 
 
-class WebTestApp(TestApp):
+class WebTestMetaDataMixin:
 
     def metadata(self, url, params='', headers=None, extra_environ=None,
                  status=None, upload_files=None, expect_errors=False,
                  content_type=None):
+        # noinspection PyUnresolvedReferences
         return self._gen_request('METADATA', url, params=params, headers=headers,
                                  extra_environ=extra_environ, status=status,
                                  upload_files=upload_files,
                                  expect_errors=expect_errors,
                                  content_type=content_type)
+
+
+class WebTestApp(TestApp, WebTestMetaDataMixin):
+    pass
 
 
 class WebAppTestCase(TestCase):
