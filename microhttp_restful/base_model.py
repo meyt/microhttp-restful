@@ -113,7 +113,7 @@ class BaseModel(SADictBaseModel):
     @classmethod
     def to_form_params(cls):
         """ Get model parameters in ``webtest_docgen.FormParam`` """
-        for c in cls.iter_dict_columns(relationships=False, include_readonly_columns=False):
+        for c in cls.iter_dict_columns(relationships=False, include_readonly_columns=False, hybrids=False):
             column = cls.get_column(c)
 
             if hasattr(column, 'default') and column.default:
