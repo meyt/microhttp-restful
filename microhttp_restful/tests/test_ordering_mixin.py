@@ -83,14 +83,6 @@ class OrderingMixinTestCase(WebAppTestCase):
             self.assertEqual(result[0].id, 1)
             self.assertEqual(result[-1].id, 5)
 
-        # nulls first
-        with Context({'QUERY_STRING': 'sort=-isActive'}, self.application):
-            OrderingObject.__order_with_nulls__ = False
-            result = OrderingObject.sort_by_request().all()
-            for x in result:
-                print(x.title)
-            # self.assertEqual(result[0].id, 1)
-            # self.assertEqual(result[-1].id, 5)
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

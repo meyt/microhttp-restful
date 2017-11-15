@@ -1,5 +1,4 @@
 from sqlalchemy import desc
-from sqlalchemy.sql.expression import nullslast, nullsfirst
 
 from nanohttp import context
 
@@ -7,7 +6,6 @@ from microhttp_restful.mixins import OrderableMixin
 
 
 class OrderingMixin:
-    __order_with_nulls__ = True  # set it False for sqlite
 
     @classmethod
     def _sort_by_key_value(cls, query, column, descending=False):
@@ -15,9 +13,6 @@ class OrderingMixin:
 
         if descending:
             expression = desc(expression)
-
-        if cls.__order_with_nulls__:
-            return query.order_by((nullsfirst if descending else nullslast)(expression))
 
         return query.order_by(expression)
 
