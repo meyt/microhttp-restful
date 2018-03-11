@@ -103,7 +103,7 @@ class BaseModel(SADictBaseModel):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             result = super(BaseModel, cls).expose(func)(*args, **kwargs)
-            if not result:
+            if result is None:
                 raise HttpNotFound
 
             return result

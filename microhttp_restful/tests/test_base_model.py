@@ -115,6 +115,11 @@ class Root(JsonPatchControllerMixin, ModelRestController):
             title='me'
         )
 
+    @json
+    @Member.expose
+    def empty(self, empty_list: bool=None):
+        return list() if empty_list else None
+
 
 class BaseModelTestCase(WebAppTestCase):
 
@@ -163,6 +168,10 @@ class BaseModelTestCase(WebAppTestCase):
 
         # Get columns in FormParameter list
         self.assertEqual(len(list(Member.to_form_params())), 10)
+
+        # Should return empty list
+        self.wsgi_app.get('/empty/true', status=200)
+        self.wsgi_app.get('/empty', status=404)
 
     def test_metadata(self):
         resp = self.wsgi_app.metadata('/')
