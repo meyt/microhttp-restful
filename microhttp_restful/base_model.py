@@ -121,9 +121,14 @@ class BaseModel(SADictBaseModel):
             else:
                 default_ = ''
 
+            try:
+                type_ = column.type.python_type
+            except NotImplementedError:
+                type_ = str(column.type)
+
             yield FormParam(
                 name=cls.get_dict_key(c),
-                type_=column.type.python_type,
+                type_=type_,
                 default=default_,
                 required=not column.nullable,
                 min_length=column.info.get('min_length'),

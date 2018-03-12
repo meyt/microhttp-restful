@@ -10,7 +10,7 @@ with open(os.path.join(os.path.dirname(__file__), 'microhttp_restful', '__init__
 
 dependencies = [
     'microhttp',
-    'sqlalchemy_dict',
+    'sqlalchemy_dict >= 0.3.1',
     'webtest_docgen'
 ]
 

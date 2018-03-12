@@ -100,6 +100,7 @@ class DocumentationTestCase(WebAppTestCase):
             'birth': '2001-01-01',
             'weight': 1.1,
             'visible': 'false',
+            'myType': 'Test',
             'lastLoginTime': '2017-10-10T15:44:30.000',
             'isActive': True
         })
@@ -109,6 +110,7 @@ class DocumentationTestCase(WebAppTestCase):
         self.wsgi_doc_app.put('/member/%s' % resp_member_one.json['id'], params={
             'weight': 1.5
         })
+
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()

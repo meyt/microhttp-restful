@@ -1,7 +1,8 @@
 import unittest
 
-from sqlalchemy import Integer, Unicode, ForeignKey, Boolean, Date, DateTime, Float
+from sqlalchemy import Integer, Unicode, ForeignKey, Boolean, Date, DateTime, Float, TypeDecorator
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import synonym
 
 from nanohttp import json
@@ -20,6 +21,17 @@ from microhttp_restful import (
 from microhttp_restful.controllers import JsonPatchControllerMixin, ModelRestController
 from microhttp_restful.tests.helpers import WebAppTestCase
 from microhttp_restful.tests.helpers import DeclarativeBase
+
+
+# noinspection PyAbstractClass
+class MyType(TypeDecorator):
+    impl = Unicode
+
+    def process_bind_param(self, value, dialect):
+        return "PREFIX:" + value
+
+    def process_result_value(self, value, dialect):
+        return value[7:]
 
 
 class FullName(object):  # pragma: no cover
@@ -77,6 +89,7 @@ class Member(ActivationMixin, ModifiedMixin, FilteringMixin, PaginationMixin, Or
     keywords = association_proxy('_keywords', 'keyword', creator=lambda k: Keyword(keyword=k))
     visible = Field(Boolean, nullable=True)
     last_login_time = Field(DateTime)
+    my_type = Field(MyType)
 
     def _set_password(self, password):
         self._password = 'hashed:%s' % password
@@ -85,6 +98,10 @@ class Member(ActivationMixin, ModifiedMixin, FilteringMixin, PaginationMixin, Or
         return self._password
 
     password = synonym('_password', descriptor=property(_get_password, _set_password), info=dict(protected=True))
+
+    @hybrid_property
+    def is_visible(self):
+        return 'yes' if self.visible else 'no'
 
 
 class Root(JsonPatchControllerMixin, ModelRestController):
@@ -140,6 +157,7 @@ class BaseModelTestCase(WebAppTestCase):
                 'birth': '2001-01-01',
                 'weight': 1.1,
                 'visible': 'false',
+                'myType': 'Test',
                 'lastLoginTime': '2017-10-10T15:44:30.000',
                 'isActive': True
             }
@@ -167,7 +185,7 @@ class BaseModelTestCase(WebAppTestCase):
         self.assertEqual(resp.json['title'], 'me')
 
         # Get columns in FormParameter list
-        self.assertEqual(len(list(Member.to_form_params())), 10)
+        self.assertEqual(len(list(Member.to_form_params())), 11)
 
         # Should return empty list
         self.wsgi_app.get('/empty/true', status=200)
