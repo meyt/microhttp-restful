@@ -19,6 +19,6 @@ Features:
     - SoftDelete
     - Activation
     - Create/Modify datetime
-- HTTP form validation based on SQLAlchemy models.
+- HTTP form validation.
 - Automatically transform the SQLAlchemy models
   and queries into JSON with standard naming(camelCase).
