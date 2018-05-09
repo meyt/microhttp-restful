@@ -1,0 +1,9 @@
+.coverage
+.idea/
+dist/
+*.egg-info/
+__pycache__/
+.coveragerc
+docs/
+venv/
+practice/
