@@ -42,11 +42,11 @@ class BaseModel(SADictBaseModel):
 
     @classmethod
     def create_sort_criteria(cls, sort_columns):
-        criteria = []
-        for c in cls.iter_dict_columns():
-            json_name = cls.get_dict_key(c)
-            if json_name in sort_columns:
-                criteria.append((c, sort_columns[json_name] == 'desc'))
+        criteria = list()
+        valid_columns = {cls.get_dict_key(field): field for field in cls.iter_dict_columns()}
+        for column_name, column_is_descending in sort_columns:
+            if column_name in valid_columns:
+                criteria.append((valid_columns[column_name], column_is_descending))
         return criteria
 
     # noinspection PyUnresolvedReferences

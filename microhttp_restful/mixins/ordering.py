@@ -28,8 +28,10 @@ class OrderingMixin:
                 return cls.apply_default_sort(query)
             return query
 
-        sort_columns = {c[1:] if c.startswith('-') else c: 'desc' if c.startswith('-') else 'asc'
-                        for c in sort_exp.split(',')}
+        sort_columns = [
+            (c[1:] if c.startswith('-') else c, c.startswith('-'))
+            for c in sort_exp.split(',')
+        ]
 
         # noinspection PyUnresolvedReferences
         criteria = cls.create_sort_criteria(sort_columns)

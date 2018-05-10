@@ -83,6 +83,8 @@ class OrderingMixinTestCase(WebAppTestCase):
             self.assertEqual(result[0].id, 1)
             self.assertEqual(result[-1].id, 5)
 
+        # TODO add test for sorting with multiple columns and check the order of columns
+
 
 if __name__ == '__main__':  # pragma: no cover
     unittest.main()
