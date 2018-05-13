@@ -15,7 +15,7 @@ class ActivationMixin:
 
     @is_active.setter
     def is_active(self, value):
-        self.activated_at = datetime.now() if value else None
+        self.activated_at = datetime.utcnow() if value else None
 
     # noinspection PyUnresolvedReferences
     @is_active.expression

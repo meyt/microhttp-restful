@@ -26,7 +26,7 @@ class SoftDeleteMixin:
     def soft_delete(self, ignore_errors=False):
         if not ignore_errors:
             self.assert_is_not_deleted()
-        self.removed_at = datetime.now()
+        self.removed_at = datetime.utcnow()
 
     def soft_undelete(self, ignore_errors=False):
         if not ignore_errors:

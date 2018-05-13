@@ -17,7 +17,7 @@ class ModifiedMixin(CreatedMixin):
     # noinspection PyUnusedLocal
     @staticmethod
     def before_update(mapper, connection, target):
-        target.modified_at = datetime.now()
+        target.modified_at = datetime.utcnow()
 
     @classmethod
     def __declare_last__(cls):
