@@ -185,7 +185,7 @@ class ORMTestCase(WebAppTestCase):
                 'id': 1,
                 'tags': [],
                 'title': 'First post',
-                'tagTime': '01:01:01'
+                'tagTime': '01:01:01Z'
             }.items())
         )
         self.assertIn('createdAt', post1_dict)
