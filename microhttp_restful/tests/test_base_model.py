@@ -171,6 +171,7 @@ class BaseModelTestCase(WebAppTestCase):
         self.assertEqual(len(resp.json), 1)
         self.assertEqual(resp.json[0]['title'], 'test')
         self.assertEqual(resp.json[0]['visible'], False)
+        self.assertEqual(resp.json[0]['lastLoginTime'], '2017-10-10T15:44:30Z')
 
         # 404
         self.wsgi_app.get(

@@ -1,10 +1,11 @@
 import functools
+import pytz
 
 from sqlalchemy import event
 from sqlalchemy.orm import validates
 from sqlalchemy.inspection import inspect
 
-from sqlalchemy_dict import BaseModel as SADictBaseModel
+from sqlalchemy_dict import BaseModel as SADictBaseModel, DefaultFormatter
 
 from webtest_docgen import FormParam
 
@@ -15,8 +16,22 @@ from microhttp_restful.validation import validate_form
 from microhttp_restful.mixins import PaginationMixin, FilteringMixin, OrderingMixin
 
 
+class RestfulFormatter(DefaultFormatter):
+
+    @classmethod
+    def export_datetime(cls, value):
+        value = value.replace(tzinfo=pytz.utc)
+        return super().export_datetime(value)
+
+    @classmethod
+    def export_time(cls, value):
+        value = value.replace(tzinfo=pytz.utc)
+        return super().export_time(value)
+
+
 # noinspection PyClassHasNoInit
 class BaseModel(SADictBaseModel):
+    __formatter__ = RestfulFormatter()
 
     def update_from_request(self):
         self.update_from_dict(context.form)
