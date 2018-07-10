@@ -2,8 +2,6 @@ from sqlalchemy import desc
 
 from nanohttp import context
 
-from microhttp_restful.mixins import OrderableMixin
-
 
 class OrderingMixin:
 
@@ -23,9 +21,6 @@ class OrderingMixin:
 
         sort_exp = context.query_string.get('sort', '').strip()
         if not sort_exp:
-            if issubclass(cls, OrderableMixin):
-                # noinspection PyUnresolvedReferences
-                return cls.apply_default_sort(query)
             return query
 
         sort_columns = [

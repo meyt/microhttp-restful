@@ -6,12 +6,12 @@ from sqlalchemy.orm import synonym
 from nanohttp.contexts import Context
 
 from microhttp.ext import db
-from microhttp_restful import OrderingMixin, OrderableMixin, Field
+from microhttp_restful import OrderingMixin, Field
 from microhttp_restful.tests.helpers import WebAppTestCase
 from microhttp_restful.tests.helpers import DeclarativeBase
 
 
-class OrderableOrderingObject(OrderableMixin, OrderingMixin, DeclarativeBase):
+class OrderableOrderingObject(OrderingMixin, DeclarativeBase):
     __tablename__ = 'orderable_ordering_object'
 
     id = Field(Integer, primary_key=True)
