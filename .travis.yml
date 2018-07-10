@@ -5,11 +5,9 @@ addons:
   postgresql: "9.6"
 python:
 - 3.5
-- 3.6
 before_install:
 - pip install -U pip setuptools wheel
 - pip install -r requirements-dev.txt
 install: pip install -e .
 script: coverage run --source microhttp_restful $(which nosetests)
-after_success: if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then travis_retry coveralls
-  ; fi
+after_success: if [[ $TRAVIS_PYTHON_VERSION == '3.6' ]]; then travis_retry coveralls; fi
