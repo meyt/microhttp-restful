@@ -18,6 +18,7 @@ class Field(SADictField):
                  icon=None,
                  example=None,
                  message=None,
+                 collation=None,
                  info=None,
                  **kwargs):
         info = info or dict()
@@ -47,6 +48,9 @@ class Field(SADictField):
 
         if message is not None:
             info['message'] = message
+
+        if collation is not None:
+            info['collation'] = collation
 
         super(Field, self).__init__(*args, info=info, nullable=nullable, **kwargs)
 

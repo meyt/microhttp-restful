@@ -9,6 +9,9 @@ class OrderingMixin:
     def _sort_by_key_value(cls, query, column, descending=False):
         expression = column
 
+        if column.info.get('collation'):
+            expression = expression.collate(column.info['collation'])
+
         if descending:
             expression = desc(expression)
 
