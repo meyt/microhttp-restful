@@ -1,5 +1,6 @@
-from nanohttp import settings
+import os
 
+from nanohttp import settings
 
 from microhttp.ext import db
 
@@ -43,7 +44,9 @@ class MockApplication(Application):
         settings.merge(self.__configurations__)
 
         with db.get_database_manager() as manager:
-            manager.drop_database()
+            # FIXME: Dirty patch for ignore Travis database fails, #11
+            if 'TRAVIS' not in os.environ:
+                manager.drop_database()
             manager.create_database()
 
         db.configure()
