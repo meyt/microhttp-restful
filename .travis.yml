@@ -9,7 +9,7 @@ before_install:
   - pip install -U pip setuptools wheel
   - pip install -r requirements-dev.txt
   - sudo apt-get update
-  - sudo apt-get install language-pack-es
+  - sudo apt-get install language-pack-fa
   - sudo /etc/init.d/postgresql stop
   - sudo /etc/init.d/postgresql start 9.3
 install: pip install -e .
