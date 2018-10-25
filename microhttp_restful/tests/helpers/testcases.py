@@ -32,7 +32,7 @@ class WebAppTestCase(TestCase):
         super().setUpClass()
         cls.application = MockApplication()
         cls.application.configure(force=True)
-        cls.wsgi_app = WebTestApp(cls.application)
+        cls.wsgi_app = WebTestApp(cls.application, lint=False)
         cls.session = db.get_session()
         DeclarativeBase.metadata.create_all(bind=cls.session.get_bind())
 
