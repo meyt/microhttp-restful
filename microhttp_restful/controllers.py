@@ -1,7 +1,7 @@
 
 import types
 
-from nanohttp import Controller, context, json, RestController, action, etag
+from nanohttp import Controller, context, json, RestController, action
 
 from microhttp.ext import db
 
@@ -22,7 +22,6 @@ class ModelRestController(RestController):
     __model__ = None
 
     @json
-    @etag(tag=lambda: context.application.version)
     def metadata(self):
         return self.__model__.json_metadata()
 
