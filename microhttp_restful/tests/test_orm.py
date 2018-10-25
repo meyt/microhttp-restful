@@ -4,7 +4,7 @@ from datetime import date, time
 from sqlalchemy import Integer, Unicode, ForeignKey, Boolean, Table, Date, Time, Float
 from sqlalchemy.orm import synonym
 
-from nanohttp import HttpBadRequest
+from nanohttp import HTTPBadRequest
 
 from microhttp.ext import db
 from microhttp_restful import ModifiedMixin, Field, composite, relationship
@@ -132,20 +132,20 @@ class ORMTestCase(WebAppTestCase):
         self.assertEqual(post1.id, 1)
 
         # Validation, Type
-        with self.assertRaises(HttpBadRequest):
+        with self.assertRaises(HTTPBadRequest):
             Author(title=234)
 
         # Validation, Pattern
-        with self.assertRaises(HttpBadRequest):
+        with self.assertRaises(HTTPBadRequest):
             Author(email='invalidEmailAddress')
 
         # Validation, Min length
-        with self.assertRaises(HttpBadRequest):
+        with self.assertRaises(HTTPBadRequest):
             Author(title='1')
 
         # Validation, Max length
         # Validation, Max length
-        with self.assertRaises(HttpBadRequest):
+        with self.assertRaises(HTTPBadRequest):
             Author(phone='12321321321312321312312')
 
         # Metadata

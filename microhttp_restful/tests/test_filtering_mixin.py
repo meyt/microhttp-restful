@@ -2,7 +2,7 @@ import unittest
 
 from sqlalchemy import Integer, Unicode
 
-from nanohttp import HttpBadRequest
+from nanohttp import HTTPBadRequest
 from nanohttp.contexts import Context
 
 from microhttp.ext import db
@@ -32,8 +32,8 @@ class FilteringMixinTestCase(WebAppTestCase):
 
         # Bad Value
         with Context({'QUERY_STRING': 'id=1'}, self.application) as context:
-            context.query_string['id'] = 1
-            self.assertRaises(HttpBadRequest, FilteringObject.filter_by_request)
+            context.query['id'] = 1
+            self.assertRaises(HTTPBadRequest, FilteringObject.filter_by_request)
 
         # IN
         with Context({'QUERY_STRING': 'id=^1,2,3'}, self.application):
@@ -45,7 +45,7 @@ class FilteringMixinTestCase(WebAppTestCase):
 
         # IN (error)
         with Context({'QUERY_STRING': 'id=^'}, self.application):
-            self.assertRaises(HttpBadRequest, FilteringObject.filter_by_request)
+            self.assertRaises(HTTPBadRequest, FilteringObject.filter_by_request)
 
         # Between
         with Context({'QUERY_STRING': 'id=~1,3'}, self.application):

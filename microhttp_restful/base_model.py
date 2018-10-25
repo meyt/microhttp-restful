@@ -9,7 +9,7 @@ from sqlalchemy_dict import BaseModel as SADictBaseModel, DefaultFormatter
 
 from webtest_docgen import FormParam
 
-from nanohttp import context, HttpNotFound
+from nanohttp import context, HTTPNotFound
 
 from microhttp_restful import MetadataField, Field
 from microhttp_restful.validation import validate_form
@@ -119,7 +119,7 @@ class BaseModel(SADictBaseModel):
         def wrapper(*args, **kwargs):
             result = super(BaseModel, cls).expose(func)(*args, **kwargs)
             if result is None:
-                raise HttpNotFound
+                raise HTTPNotFound
 
             return result
 

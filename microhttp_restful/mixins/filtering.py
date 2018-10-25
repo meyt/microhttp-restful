@@ -1,6 +1,6 @@
 from sqlalchemy import between
 
-from nanohttp import context, HttpBadRequest
+from nanohttp import context, HTTPBadRequest
 
 
 class FilteringMixin:
@@ -13,8 +13,8 @@ class FilteringMixin:
         for c in cls.iter_dict_columns():
             # noinspection PyUnresolvedReferences
             json_name = cls.get_dict_key(c)
-            if json_name in context.query_string:
-                value = context.query_string[json_name]
+            if json_name in context.query:
+                value = context.query[json_name]
                 query = cls._filter_by_column_value(query, c, value)
 
         return query
@@ -23,7 +23,7 @@ class FilteringMixin:
     def _filter_by_column_value(cls, query, column, value):
         import_value = getattr(cls, 'import_value')
         if not isinstance(value, str):
-            raise HttpBadRequest()
+            raise HTTPBadRequest()
 
         if value.startswith('^') or value.startswith('!^'):
             value = value.split(',')
@@ -32,7 +32,7 @@ class FilteringMixin:
             items = [first_item] + value[1:]
             items = [i for i in items if i.strip()]
             if not len(items):
-                raise HttpBadRequest('Invalid query string: %s' % value)
+                raise HTTPBadRequest('Invalid query string: %s' % value)
             expression = column.in_([import_value(column, j) for j in items])
             if not_:
                 expression = ~expression

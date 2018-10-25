@@ -2,7 +2,7 @@ import re
 import functools
 from itertools import chain
 
-from nanohttp import context, HttpBadRequest
+from nanohttp import context, HTTPBadRequest
 
 
 class FormValidator:
@@ -61,7 +61,7 @@ class FormValidator:
         return result
 
     def __call__(self, *args, **kwargs):
-        input_collections = [context.form, context.query_string]
+        input_collections = [context.form, context.query]
         all_input_fields = set(chain(*input_collections))
         user_rules = [v for k, v in self._rules_per_role.items() if k in context.identity.roles] \
             if hasattr(context, 'identity') and context.identity else []
@@ -69,7 +69,7 @@ class FormValidator:
         denied_fields = self.extract_rules_odd('blacklist', user_rules)
         if denied_fields:
             if all_input_fields & denied_fields:
-                raise HttpBadRequest('These fields are denied: [%s]' % ', '.join(denied_fields))
+                raise HTTPBadRequest('These fields are denied: [%s]' % ', '.join(denied_fields))
 
         excluded_fields = self.extract_rules_odd('exclude', user_rules)
         if excluded_fields:
@@ -86,19 +86,19 @@ class FormValidator:
         whitelist_fields = self.extract_rules_odd('whitelist', user_rules)
         if whitelist_fields:
             if all_input_fields - whitelist_fields:
-                raise HttpBadRequest(
+                raise HTTPBadRequest(
                     'These fields are not allowed: [%s]' % ', '.join(all_input_fields - whitelist_fields)
                 )
 
         required_fields = self.extract_rules_odd('requires', user_rules)
         if required_fields:
             if required_fields - all_input_fields:
-                raise HttpBadRequest('These fields are required: [%s]' % ', '.join(required_fields - all_input_fields))
+                raise HTTPBadRequest('These fields are required: [%s]' % ', '.join(required_fields - all_input_fields))
 
         exact_fields = self.extract_rules_odd('exact', user_rules)
         if exact_fields:
             if exact_fields != all_input_fields:
-                raise HttpBadRequest('Exactly these fields are allowed: [%s]' % ', '.join(exact_fields))
+                raise HTTPBadRequest('Exactly these fields are allowed: [%s]' % ', '.join(exact_fields))
 
         type_pairs = self.extract_rules_pair('types', user_rules)
         if type_pairs:
@@ -109,7 +109,7 @@ class FormValidator:
                     try:
                         collection[field] = desired_type(collection[field])
                     except ValueError:
-                        raise HttpBadRequest('The field: %s must be %s' % (field, desired_type))
+                        raise HTTPBadRequest('The field: %s must be %s' % (field, desired_type))
 
         pattern_pairs = self.extract_rules_pair('pattern', user_rules)
         if pattern_pairs:
@@ -119,7 +119,7 @@ class FormValidator:
                     desired_pattern = pattern_pairs[field]
                     pattern = re.compile(desired_pattern) if isinstance(desired_pattern, str) else desired_pattern
                     if pattern.match(collection[field]) is None:
-                        raise HttpBadRequest(
+                        raise HTTPBadRequest(
                             'The field %s: %s must be matched with %s pattern' %
                             (field, collection[field], pattern.pattern)
                         )
@@ -130,19 +130,19 @@ def validate_form(blacklist=None, exclude=None, filter_=None, whitelist=None, re
                   pattern=None, **rules_per_role):
     """Creates a validation decorator based on given rules:
 
-    :param blacklist: A list fields to raise :class:`nanohttp.exceptions.HttpBadRequest` if exists in request.
+    :param blacklist: A list fields to raise :class:`nanohttp.exceptions.HTTPBadRequest` if exists in request.
     :param exclude: A list of fields to remove from the request payload if exists.
     :param filter_: A list of fields to filter the request payload.
-    :param whitelist: A list of fields to raise :class:`nanohttp.exceptions.HttpBadRequest` if anythings else found in
+    :param whitelist: A list of fields to raise :class:`nanohttp.exceptions.HTTPBadRequest` if anythings else found in
                       the request payload.
-    :param requires: A list of fields to raise :class:`nanohttp.exceptions.HttpBadRequest` if the given fields are not
+    :param requires: A list of fields to raise :class:`nanohttp.exceptions.HTTPBadRequest` if the given fields are not
                      in the request payload.
-    :param exact: A list of fields to raise :class:`nanohttp.exceptions.HttpBadRequest` if the given fields are not
+    :param exact: A list of fields to raise :class:`nanohttp.exceptions.HTTPBadRequest` if the given fields are not
                   exact match.
     :param types: A dictionary of fields and their expected types. Fields will be casted to expected types if possible.
-                  Otherwise :class:`nanohttp.exceptions.HttpBadRequest` will be raised.
+                  Otherwise :class:`nanohttp.exceptions.HTTPBadRequest` will be raised.
     :param pattern: A dictionary of fields and their expected regex patterns. Fields will be matched by expected pattern
-                    if possible. Otherwise :class:`nanohttp.exceptions.HttpBadRequest` will be raised.
+                    if possible. Otherwise :class:`nanohttp.exceptions.HTTPBadRequest` will be raised.
 
     :param rules_per_role: A dictionary ``{ role: { ... } }``, which you can apply above rules to single role.
 
@@ -166,8 +166,8 @@ def validate_form(blacklist=None, exclude=None, filter_=None, whitelist=None, re
 def prevent_form(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if context.form or context.query_string:
-            raise HttpBadRequest('No input allowed.')
+        if context.form or context.query:
+            raise HTTPBadRequest('No input allowed.')
         return func(*args, **kwargs)
 
     return wrapper

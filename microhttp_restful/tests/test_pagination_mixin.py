@@ -2,7 +2,7 @@ import unittest
 
 from sqlalchemy import Integer, Unicode
 
-from nanohttp import HttpBadRequest
+from nanohttp import HTTPBadRequest
 from nanohttp.contexts import Context
 
 from microhttp.ext import db
@@ -41,7 +41,7 @@ class PaginationMixinTestCase(WebAppTestCase):
             self.assertEqual(PagingObject.paginate_by_request().count(), 4)
 
         with Context({'QUERY_STRING': 'take=5'}, self.application):
-            self.assertRaises(HttpBadRequest, PagingObject.paginate_by_request)
+            self.assertRaises(HTTPBadRequest, PagingObject.paginate_by_request)
 
 
 if __name__ == '__main__':  # pragma: no cover

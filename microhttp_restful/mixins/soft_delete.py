@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import DateTime
 from sqlalchemy.events import event
 
-from nanohttp import HttpConflict
+from nanohttp import HTTPConflict
 
 from microhttp_restful import Field
 
@@ -35,7 +35,7 @@ class SoftDeleteMixin:
 
     @staticmethod
     def before_delete(mapper, connection, target):
-        raise HttpConflict('Cannot remove this object: %s' % target)
+        raise HTTPConflict('Cannot remove this object: %s' % target)
 
     @classmethod
     def __declare_last__(cls):

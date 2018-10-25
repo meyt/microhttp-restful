@@ -1,7 +1,7 @@
 import re
 from sqlalchemy import Unicode, String
 from sqlalchemy_dict import Field as SADictField
-from nanohttp import HttpBadRequest
+from nanohttp import HTTPBadRequest
 
 
 # noinspection PyAbstractClass
@@ -64,7 +64,7 @@ class Field(SADictField):
         if value is None:
             return
         if not re.match(self.info['pattern'], value):
-            raise HttpBadRequest('Cannot match field: %s with value "%s" by acceptable pattern' % (self.name, value))
+            raise HTTPBadRequest('Cannot match field: %s with value "%s" by acceptable pattern' % (self.name, value))
         return value
 
     def _validate_length(self, value, min_length, max_length):
@@ -72,16 +72,16 @@ class Field(SADictField):
             return
 
         if not isinstance(value, str):
-            raise HttpBadRequest('Invalid type: %s for field: %s' % (type(value), self.name))
+            raise HTTPBadRequest('Invalid type: %s for field: %s' % (type(value), self.name))
 
         value_length = len(value)
         if min_length is not None:
             if value_length < min_length:
-                raise HttpBadRequest('Please enter at least %d characters for field: %s.' % (min_length, self.name))
+                raise HTTPBadRequest('Please enter at least %d characters for field: %s.' % (min_length, self.name))
 
         if max_length is not None:
             if value_length > max_length:
-                raise HttpBadRequest('Cannot enter more than: %d in field: %s.' % (max_length, self.name))
+                raise HTTPBadRequest('Cannot enter more than: %d in field: %s.' % (max_length, self.name))
 
     def validate(self, value):
         if 'pattern' in self.info:

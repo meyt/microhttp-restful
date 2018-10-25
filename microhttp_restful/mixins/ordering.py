@@ -22,7 +22,7 @@ class OrderingMixin:
         # noinspection PyUnresolvedReferences
         query = query or cls.query
 
-        sort_exp = context.query_string.get('sort', '').strip()
+        sort_exp = context.query.get('sort', '').strip()
         if not sort_exp:
             return query
 

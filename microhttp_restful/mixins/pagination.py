@@ -1,4 +1,4 @@
-from nanohttp import context, HttpBadRequest
+from nanohttp import context, HTTPBadRequest
 
 
 class PaginationMixin:
@@ -13,17 +13,17 @@ class PaginationMixin:
 
         try:
             take = int(
-                context.query_string.get('take') or context.environ.get(cls.__take_header_key__) or cls.__max_take__)
+                context.query.get('take') or context.environ.get(cls.__take_header_key__) or cls.__max_take__)
         except ValueError:
             take = cls.__max_take__
 
         try:
-            skip = int(context.query_string.get('skip') or context.environ.get(cls.__skip_header_key__) or 0)
+            skip = int(context.query.get('skip') or context.environ.get(cls.__skip_header_key__) or 0)
         except ValueError:
             skip = 0
 
         if take > cls.__max_take__:
-            raise HttpBadRequest()
+            raise HTTPBadRequest()
 
         context.response_headers.add_header('X-Pagination-Take', str(take))
         context.response_headers.add_header('X-Pagination-Skip', str(skip))

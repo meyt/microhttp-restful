@@ -2,7 +2,7 @@ import unittest
 
 from sqlalchemy import Unicode
 
-from nanohttp import HttpConflict
+from nanohttp import HTTPConflict
 
 from microhttp.ext import db
 from microhttp_restful import SoftDeleteMixin, Field
@@ -48,7 +48,7 @@ class SoftDeleteCheckingModelTestCase(WebAppTestCase):
         self.assertEqual(SoftDeleteCheckingModel.exclude_deleted().count(), 1)
 
         db_session.delete(instance)
-        self.assertRaises(HttpConflict, db_session.commit)
+        self.assertRaises(HTTPConflict, db_session.commit)
 
 
 if __name__ == '__main__':  # pragma: no cover
