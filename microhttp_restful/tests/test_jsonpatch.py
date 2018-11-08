@@ -1,3 +1,4 @@
+
 import ujson
 import unittest
 
@@ -46,12 +47,35 @@ class JsonPatchTestCase(WebAppTestCase):
         with Context(environ):
             controller = SimpleJsonPatchController()
             context.form = [
-                {"op": "get", "path": "/"},
-                {"op": "put", "path": "biscuits/1", "value": {"name": "Ginger Nut"}},
-                {"op": "get", "path": "biscuits/2", "value": {"name": "Ginger Nut"}},
+                {
+                    'op': 'get',
+                    'path': '/'
+                },
+                {
+                    'op': 'put',
+                    'path': 'biscuits/1?size=A',
+                    'value': {'name': 'Ginger Nut'}
+                },
+                {
+                    'op': 'get',
+                    'path': 'biscuits/2',
+                    'value': {'name': 'Ginger Nut'}
+                }
             ]
             result = ujson.loads(controller())
             self.assertEqual(len(result), 3)
+            self.assertEqual(result, [
+                'heyyou',
+                {
+                    'name': 'Ginger Nut',
+                    'size': 'A',
+                    'id': '1'
+                },
+                {
+                    'name': 'Ginger Nut',
+                    'id': '2'
+                }
+            ])
 
     def test_jsonpatch_error(self):
         environ = {
@@ -60,8 +84,16 @@ class JsonPatchTestCase(WebAppTestCase):
         with Context(environ):
             controller = SimpleJsonPatchController()
             context.form = [
-                {"op": "put", "path": "biscuits/1", "value": {"name": "Ginger Nut"}},
-                {"op": "error", "path": "biscuits", "value": None},
+                {
+                    'op': 'put', 
+                    'path': 'biscuits/1', 
+                    'value': {'name': 'Ginger Nut'}
+                },
+                {
+                    'op': 'error', 
+                    'path': 'biscuits', 
+                    'value': None
+                }
             ]
             self.assertRaises(Exception, controller)
 
