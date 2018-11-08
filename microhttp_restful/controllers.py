@@ -38,7 +38,7 @@ class JsonPatchControllerMixin:
         # Preserve patches
         patches = context.form
         results = []
-        context.jsonpatch = True
+        context.suppress_db_commit = True
         db_session = db.get_session()
         try:
             for patch in patches:
@@ -59,9 +59,11 @@ class JsonPatchControllerMixin:
                 db_session.flush()
             db_session.commit()
             return '[%s]' % ',\n'.join(results)
-        except:
+
+        except Exception:
             if db_session.is_active:
                 db_session.rollback()
             raise
+
         finally:
-            del context.jsonpatch
+            del context.suppress_db_commit
