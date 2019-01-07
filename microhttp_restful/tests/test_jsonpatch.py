@@ -2,7 +2,7 @@
 import ujson
 import unittest
 
-from nanohttp import context, json, text, RestController
+from nanohttp import context, json, text, RestController, HTTPNoContent
 from nanohttp.contexts import Context
 
 from microhttp_restful.controllers import JsonPatchControllerMixin
@@ -27,6 +27,10 @@ class BiscuitsController(RestController):
     @json
     def error(self):
         raise Exception()
+
+    @text
+    def patch(self):
+        raise HTTPNoContent
 
 
 class SimpleJsonPatchController(JsonPatchControllerMixin, RestController):
@@ -60,10 +64,15 @@ class JsonPatchTestCase(WebAppTestCase):
                     'op': 'get',
                     'path': 'biscuits/2',
                     'value': {'name': 'Ginger Nut'}
+                },
+                {
+                    'op': 'patch',
+                    'path':  'biscuits',
+                    'value': {'name': 'KitKat'}
                 }
             ]
             result = ujson.loads(controller())
-            self.assertEqual(len(result), 3)
+            self.assertEqual(len(result), 4)
             self.assertEqual(result, [
                 'heyyou',
                 {
@@ -74,7 +83,8 @@ class JsonPatchTestCase(WebAppTestCase):
                 {
                     'name': 'Ginger Nut',
                     'id': '2'
-                }
+                },
+                ''
             ])
 
     def test_jsonpatch_error(self):

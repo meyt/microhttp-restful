@@ -3,7 +3,14 @@ import types
 
 from urllib.parse import parse_qs
 
-from nanohttp import Controller, context, json, RestController, action
+from nanohttp import (
+    Controller,
+    context,
+    json,
+    RestController,
+    action,
+    HTTPStatus
+)
 
 from microhttp.ext import db
 
@@ -63,10 +70,19 @@ class JsonPatchControllerMixin:
                 context.method = patch['op'].lower()
 
                 remaining_paths = path.split('/')
-                if remaining_paths and not remaining_paths[0]:
-                    return_data = self()
-                else:
-                    return_data = self(*remaining_paths)
+                try:
+                    if remaining_paths and not remaining_paths[0]:
+                        return_data = self()
+                    else:
+                        return_data = self(*remaining_paths)
+
+                except HTTPStatus as e:
+                    # Return empty for HTTP 2xx success statuses
+                    if 200 < int(e.status[:3]) < 300:
+                        db_session.commit()
+                        return_data = '""'
+                    else:
+                        raise
 
                 if isinstance(return_data, types.GeneratorType):
                     results.append('"%s"' % ''.join(list(return_data)))
