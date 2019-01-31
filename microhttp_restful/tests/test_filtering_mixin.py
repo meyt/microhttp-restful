@@ -35,6 +35,9 @@ class FilteringMixinTestCase(WebAppTestCase):
             context.query['id'] = 1
             self.assertRaises(HTTPBadRequest, FilteringObject.filter_by_request)
 
+        with Context({'QUERY_STRING': 'id=1&id=2'}, self.application):
+            self.assertRaises(HTTPBadRequest, FilteringObject.filter_by_request)
+
         # IN
         with Context({'QUERY_STRING': 'id=^1,2,3'}, self.application):
             self.assertEqual(FilteringObject.filter_by_request().count(), 3)
