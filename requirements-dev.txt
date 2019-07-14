@@ -2,3 +2,4 @@ nose
 coverage
 coveralls
 psycopg2
+freezegun

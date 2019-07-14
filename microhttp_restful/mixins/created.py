@@ -5,4 +5,9 @@ from microhttp_restful import Field
 
 
 class CreatedMixin:
-    created_at = Field(DateTime, default=datetime.utcnow, nullable=False, readonly=True)
+    created_at = Field(
+        DateTime,
+        default=lambda: datetime.utcnow(),
+        nullable=False,
+        readonly=True
+    )
