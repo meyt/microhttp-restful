@@ -27,8 +27,8 @@ class ValidationTypesController(RestController):
         },
         admin={
            'types': {
-               'typedParam1': complex,
-               'typedParam4': complex
+               'typedParam1': int,
+               'typedParam4': int
            }
         }
     )
@@ -107,11 +107,10 @@ class ValidationTypesTestCase(WebAppTestCase):
                 'typedParam4': '4'
             }
         )
-        # type complex is dict
-        self.assertEqual(type(resp.json['typedParam1']), dict)
+        self.assertEqual(type(resp.json['typedParam1']), int)
         self.assertEqual(type(resp.json['typedParam2']), float)
         self.assertEqual(type(resp.json['typedParam3']), float)
-        self.assertEqual(type(resp.json['typedParam4']), dict)
+        self.assertEqual(type(resp.json['typedParam4']), int)
 
         self.wsgi_app.post(
             '/validation',
