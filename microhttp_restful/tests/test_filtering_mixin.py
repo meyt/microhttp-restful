@@ -1,6 +1,8 @@
 import unittest
 
-from sqlalchemy import Integer, Unicode
+from datetime import datetime
+
+from sqlalchemy import Integer, Unicode, DateTime
 
 from nanohttp import HTTPBadRequest
 from nanohttp.contexts import Context
@@ -16,6 +18,7 @@ class FilteringObject(FilteringMixin, DeclarativeBase):
 
     id = Field(Integer, primary_key=True)
     title = Field(Unicode(50))
+    updated_at = Field(DateTime, nullable=True)
 
 
 class FilteringMixinTestCase(WebAppTestCase):
@@ -26,6 +29,7 @@ class FilteringMixinTestCase(WebAppTestCase):
             # noinspection PyArgumentList
             obj = FilteringObject(
                 title='object %s' % i,
+                updated_at=datetime.utcnow().replace(2010, 10, 10, 12, 12, 12, 0)
             )
             db_session.add(obj)
         db_session.commit()
@@ -99,6 +103,10 @@ class FilteringMixinTestCase(WebAppTestCase):
         # <
         with Context({'QUERY_STRING': 'id=<3'}, self.application):
             self.assertEqual(FilteringObject.filter_by_request().count(), 2)
+
+        # Date Time
+        with Context({'QUERY_STRING': 'updatedAt=2010-10-10T12:12:12Z'}, self.application):
+            self.assertEqual(FilteringObject.filter_by_request().count(), 5)
 
 
 if __name__ == '__main__':  # pragma: no cover
