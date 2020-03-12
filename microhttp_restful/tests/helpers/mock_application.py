@@ -17,13 +17,13 @@ class MockApplication(Application):
     __configurations__ = '''
         ### nanohttp
         debug: true
-        
+
         cookie:
           http_only: false
           secure: false
         json:
           indent: 0
-        
+
         ### microhttp.ext.db
         sqlalchemy:
           default:

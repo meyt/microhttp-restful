@@ -1,6 +1,6 @@
 import unittest
 
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 
 from sqlalchemy import Integer, Unicode, DateTime
 
@@ -29,7 +29,7 @@ class FilteringMixinTestCase(WebAppTestCase):
             # noinspection PyArgumentList
             obj = FilteringObject(
                 title='object %s' % i,
-                updated_at=datetime.utcnow().replace(2010, 10, 10, 12, 12, 12, 0)
+                updated_at=datetime(2010, 10, 10, 12, 12, 12, 300)
             )
             db_session.add(obj)
         db_session.commit()
@@ -105,7 +105,7 @@ class FilteringMixinTestCase(WebAppTestCase):
             self.assertEqual(FilteringObject.filter_by_request().count(), 2)
 
         # Date Time
-        with Context({'QUERY_STRING': 'updatedAt=2010-10-10T12:12:12Z'}, self.application):
+        with Context({'QUERY_STRING': 'updatedAt=2010-10-10T12:12:12.000300'}, self.application):
             self.assertEqual(FilteringObject.filter_by_request().count(), 5)
 
 

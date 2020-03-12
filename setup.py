@@ -11,7 +11,7 @@ with open(os.path.join(os.path.dirname(__file__), 'microhttp_restful', '__init__
 dependencies = [
     'pytz',
     'microhttp ~= 0.14.0',
-    'sqlalchemy_dict >= 0.6.2',
+    'sqlalchemy_dict >= 0.7.0',
     'webtest_docgen'
 ]
 

@@ -158,7 +158,7 @@ class BaseModelTestCase(WebAppTestCase):
                 'weight': 1.1,
                 'visible': 'false',
                 'myType': 'Test',
-                'lastLoginTime': '2017-10-10T15:44:30.000',
+                'lastLoginTime': '2017-10-10T15:44:30.000+00:00',
                 'isActive': True
             }
         )
@@ -171,7 +171,7 @@ class BaseModelTestCase(WebAppTestCase):
         self.assertEqual(len(resp.json), 1)
         self.assertEqual(resp.json[0]['title'], 'test')
         self.assertEqual(resp.json[0]['visible'], False)
-        self.assertEqual(resp.json[0]['lastLoginTime'], '2017-10-10T15:44:30.000001Z')
+        self.assertEqual(resp.json[0]['lastLoginTime'], '2017-10-10T15:44:30+00:00')
 
         # 404
         self.wsgi_app.get(
